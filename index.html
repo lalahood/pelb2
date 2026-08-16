@@ -519,6 +519,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <button data-go="final" data-f="0.2"><span>Бронь</span><b></b></button>
 </aside>
 
+<audio id="amb" src="audio/midnight-grill.mp3" loop preload="none"></audio>
 <button class="snd" id="snd" aria-pressed="false">
   <u><s></s><s></s><s></s><s></s></u><span id="sndLabel">Звук выкл.</span>
 </button>
@@ -1200,17 +1201,51 @@ function chrome(y){
   for (i=0;i<railBtns.length;i++) railBtns[i].classList.toggle('is-on', i===best);
 }
 
-/* звук — только по клику, по умолчанию выключен */
+/* Звук — только мелодия и только по клику. Ролики молчат всегда.
+   Громкость не переключается рывком, а разводится за секунду. */
 var snd = document.getElementById('snd');
 var sndLabel = document.getElementById('sndLabel');
+var amb = document.getElementById('amb');
 var vids = [].slice.call(document.querySelectorAll('video'));
-var sound = false;
-snd.addEventListener('click', function(){
-  sound = !sound;
+var sound = false, fadeId = null;
+var VOL = .34;
+
+function ramp(to, done){
+  if (fadeId) cancelAnimationFrame(fadeId);
+  var from = amb.volume, t0 = performance.now(), dur = 1100;
+  (function step(now){
+    var k = clamp((now - t0) / dur, 0, 1);
+    amb.volume = clamp(from + (to - from) * k, 0, 1);
+    if (k < 1) fadeId = requestAnimationFrame(step);
+    else { fadeId = null; if (done) done(); }
+  })(t0);
+}
+function setLabel(){
   snd.classList.toggle('is-live', sound);
   snd.setAttribute('aria-pressed', String(sound));
   sndLabel.textContent = sound ? 'Звук вкл.' : 'Звук выкл.';
-  vids.forEach(function(v){ v.muted = !sound; if (sound && v.paused) v.play().catch(function(){}); });
+}
+
+snd.addEventListener('click', function(){
+  sound = !sound;
+  setLabel();
+  if (sound){
+    amb.preload = 'auto';
+    amb.volume = 0;
+    var p = amb.play();
+    if (p && p.then) p.then(function(){ ramp(VOL); })
+                      .catch(function(){ sound = false; setLabel(); });
+    else ramp(VOL);
+  } else {
+    ramp(0, function(){ amb.pause(); });
+  }
+});
+
+/* ушли на другую вкладку — музыка не играет в фоне */
+document.addEventListener('visibilitychange', function(){
+  if (!sound) return;
+  if (document.hidden) amb.pause();
+  else amb.play().catch(function(){});
 });
 
 /* видео — играют только в кадре */
