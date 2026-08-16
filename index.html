@@ -392,7 +392,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .m-b{grid-column:7/13;aspect-ratio:3/4;
   max-height:80vh;max-height:80svh;
   margin-top:clamp(3rem,10vh,9rem)}
-.m-c{grid-column:2/7;aspect-ratio:16/10;margin-top:clamp(2rem,6vh,5rem)}
+/* кадр вертикальный: слот чуть выше 16:10, а кадрирование смещено вниз —
+   иначе стол с мясом уходит за нижнюю границу */
+.m-c{grid-column:2/7;aspect-ratio:4/3;margin-top:clamp(2rem,6vh,5rem)}
+.m-c img{object-position:50% 72%}
 .m-txt{grid-column:8/12;margin-top:clamp(3rem,9vh,8rem)}
 .m-txt .eyebrow{margin-bottom:1.1rem}
 
