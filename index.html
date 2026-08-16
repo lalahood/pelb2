@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ПЁЛЬ — 별 — звезда, огонь, стол</title>
+<meta name="description" content="ПЁЛЬ (별) — звезда. Корейская кухня и BBQ за вашим столом. Новороссийск, ул. Хворостянского, 2Б. Иммерсивный концепт сайта.">
+<meta name="theme-color" content="#070605">
+<link rel="icon" href="img/star-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500&family=Manrope:wght@200;300;400;500&family=Noto+Sans+KR:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/bbq.png">
+<style>
+/* ==========================================================================
+   ПЁЛЬ · IMMERSIVE
+   별 → звезда → свет → огонь → BBQ → кухня → цех → зал → бронь
+   Один непрерывный кадр. Скролл — камера.
+   ========================================================================== */
+
+:root{
+  --void:      #070605;
+  --char:      #100D0B;
+  --char-2:    #171310;
+  --milk:      #F2EADF;
+  --milk-72:   rgba(242,234,223,.72);
+  --milk-46:   rgba(242,234,223,.46);
+  --milk-26:   rgba(242,234,223,.26);
+  --milk-12:   rgba(242,234,223,.12);
+  --milk-06:   rgba(242,234,223,.06);
+  --wood:      #7A5A3C;
+  --gold:      #D9A566;
+  --ember:     #D9501C;
+
+  --disp: 'Unbounded', 'Manrope', system-ui, sans-serif;
+  --ui:   'Manrope', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --kr:   'Noto Sans KR', 'Malgun Gothic', sans-serif;
+
+  --pad: clamp(1.15rem, 4.4vw, 5.5rem);
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --slow: cubic-bezier(.16,.84,.30,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+body{
+  margin:0;background:var(--void);color:var(--milk);
+  font-family:var(--ui);font-weight:300;font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--ember);color:#fff}
+:focus-visible{outline:1px solid var(--gold);outline-offset:6px}
+
+/* ---------- типографика ---------- */
+.dsp{
+  font-family:var(--disp);font-weight:200;line-height:.92;
+  letter-spacing:-.035em;margin:0;text-transform:uppercase;
+}
+.dsp--xl{font-size:clamp(2.9rem,9.4vw,10.5rem)}
+.dsp--lg{font-size:clamp(2.3rem,6.6vw,7rem)}
+.dsp--md{font-size:clamp(1.7rem,3.9vw,3.9rem)}
+.eyebrow{
+  font-family:var(--ui);font-size:.625rem;letter-spacing:.42em;
+  text-transform:uppercase;font-weight:400;color:var(--milk-46);margin:0;
+}
+.lede{font-size:clamp(1rem,1.15vw,1.16rem);line-height:1.78;color:var(--milk-72);max-width:44ch}
+.kr{font-family:var(--kr);font-weight:300;letter-spacing:0}
+
+/* ---------- кнопки ---------- */
+.btn{
+  --bg:transparent;--fg:var(--milk);--bd:var(--milk-26);
+  display:inline-flex;align-items:center;gap:.9em;
+  padding:1.05em 1.9em;border:1px solid var(--bd);border-radius:100px;
+  background:var(--bg);color:var(--fg);
+  font-size:.6875rem;letter-spacing:.26em;text-transform:uppercase;font-weight:500;
+  position:relative;overflow:hidden;isolation:isolate;
+  transition:color .5s var(--ease),border-color .5s var(--ease);
+}
+.btn::after{
+  content:'';position:absolute;inset:0;z-index:-1;background:var(--milk);
+  transform:translate3d(0,101%,0);transition:transform .62s var(--slow);
+}
+.btn:hover{color:var(--void);border-color:var(--milk)}
+.btn:hover::after{transform:translate3d(0,0,0)}
+.btn--fire{--bd:rgba(255,138,88,.62);color:#FFD9BE}
+.btn--fire::after{background:var(--ember)}
+.btn--fire:hover{color:#fff;border-color:var(--ember)}
+.btn--dark{--bd:rgba(16,13,11,.24);color:var(--char)}
+.btn--dark::after{background:var(--char)}
+.btn--dark:hover{color:var(--milk);border-color:var(--char)}
+.btn--xl{padding:1.35em 2.6em;font-size:.75rem}
+.btn i{display:block;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
+
+/* ---------- строки с раскрытием ---------- */
+/* маска строки: запас снизу под выносные элементы, скрытая строка уезжает целиком */
+.rv .ln{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.rv .ln>i{display:block;font-style:normal;will-change:transform}
+
+/* ---------- навигация ---------- */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  padding:clamp(.9rem,2vw,1.6rem) var(--pad);
+  opacity:0;transform:translate3d(0,-14px,0);pointer-events:none;
+  transition:opacity .8s var(--ease),transform .8s var(--ease);
+  mix-blend-mode:difference;
+}
+.nav.on{opacity:1;transform:none;pointer-events:auto}
+.nav__brand{display:flex;align-items:baseline;gap:.6rem;font-family:var(--disp);
+  font-weight:300;letter-spacing:.12em;font-size:.9rem;text-transform:uppercase}
+.nav__brand .kr{font-size:.95rem;color:var(--gold);opacity:.9}
+.nav__links{display:flex;align-items:center;gap:clamp(1rem,2.2vw,2.4rem)}
+.nav__links a{
+  font-size:.625rem;letter-spacing:.28em;text-transform:uppercase;color:var(--milk-72);
+  position:relative;padding:.35em 0;transition:color .4s var(--ease);
+}
+.nav__links a::after{
+  content:'';position:absolute;left:0;bottom:0;height:1px;width:100%;background:currentColor;
+  transform:scaleX(0);transform-origin:100% 50%;transition:transform .5s var(--slow);
+}
+.nav__links a:hover{color:var(--milk)}
+.nav__links a:hover::after{transform:scaleX(1);transform-origin:0 50%}
+/* та же механика заливки, что у .btn: подложка выезжает снизу */
+.nav__cta{
+  font-size:.625rem;letter-spacing:.26em;text-transform:uppercase;
+  border:1px solid var(--milk-26);border-radius:100px;padding:.8em 1.4em;
+  position:relative;overflow:hidden;isolation:isolate;
+  transition:color .5s var(--ease),border-color .5s var(--ease);
+}
+.nav__cta::after{
+  content:'';position:absolute;inset:0;z-index:-1;background:var(--milk);
+  transform:translate3d(0,101%,0);transition:transform .62s var(--slow);
+}
+.nav__cta:hover{color:var(--void);border-color:var(--milk)}
+.nav__cta:hover::after{transform:translate3d(0,0,0)}
+.nav__burger{display:none}
+
+/* ---------- рельс сцен ---------- */
+.rail{
+  position:fixed;right:calc(var(--pad) * .55);top:50%;transform:translateY(-50%);
+  z-index:55;display:flex;flex-direction:column;gap:.85rem;align-items:flex-end;
+  opacity:0;transition:opacity .8s var(--ease);mix-blend-mode:difference;
+}
+.rail.on{opacity:1}
+.rail button{display:flex;align-items:center;gap:.7rem;padding:.15rem 0}
+.rail span{
+  font-size:.5625rem;letter-spacing:.24em;text-transform:uppercase;color:var(--milk-26);
+  opacity:0;transform:translate3d(6px,0,0);transition:.45s var(--ease);white-space:nowrap;
+}
+.rail b{display:block;width:16px;height:1px;background:var(--milk-26);transition:.5s var(--slow)}
+.rail button:hover span{opacity:1;transform:none}
+.rail button.is-on b{width:34px;background:var(--gold)}
+.rail button.is-on span{opacity:1;transform:none;color:var(--milk-72)}
+
+/* ---------- звук ---------- */
+.snd{
+  position:fixed;left:var(--pad);bottom:clamp(1rem,2.4vw,2rem);z-index:55;
+  display:flex;align-items:center;gap:.6rem;opacity:0;transition:opacity .8s var(--ease);
+  font-size:.5625rem;letter-spacing:.26em;text-transform:uppercase;color:var(--milk-46);
+  mix-blend-mode:difference;
+}
+.snd.on{opacity:1}
+.snd u{display:flex;align-items:flex-end;gap:2px;height:11px;text-decoration:none}
+.snd u s{display:block;width:2px;height:3px;background:currentColor;text-decoration:none;transition:height .3s var(--ease)}
+.snd.is-live{color:var(--gold)}
+.snd.is-live u s{animation:eq 1.1s var(--ease) infinite}
+.snd.is-live u s:nth-child(2){animation-delay:.18s}
+.snd.is-live u s:nth-child(3){animation-delay:.36s}
+.snd.is-live u s:nth-child(4){animation-delay:.1s}
+@keyframes eq{0%,100%{height:3px}50%{height:11px}}
+
+/* ---------- зерно поверх всего ---------- */
+.grain{
+  position:fixed;inset:-120px;z-index:70;pointer-events:none;opacity:.26;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode:soft-light;animation:grain 5s steps(5) infinite;
+}
+@keyframes grain{
+  0%{transform:translate3d(0,0,0)}20%{transform:translate3d(-40px,20px,0)}
+  40%{transform:translate3d(30px,-30px,0)}60%{transform:translate3d(-20px,40px,0)}
+  80%{transform:translate3d(40px,10px,0)}100%{transform:translate3d(0,0,0)}
+}
+
+/* ==========================================================================
+   СЦЕНЫ 01–03 · КИНОКАДР: звезда → свет → огонь → BBQ
+   ========================================================================== */
+.cine{position:relative;height:720vh}
+.cine__stage{
+  position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 55%,#0B0908 0%,#050404 70%);
+}
+.cine__gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cine__fallback{
+  position:absolute;inset:0;display:none;
+  background:
+    radial-gradient(38% 32% at 50% 48%,rgba(255,196,120,.55),transparent 70%),
+    radial-gradient(120% 80% at 50% 105%,rgba(217,80,28,.45),transparent 65%),
+    #070605;
+}
+.no-gl .cine__fallback{display:block}
+.cine__photo{
+  position:absolute;inset:0;background:url('img/bbq.png') center/cover no-repeat;
+  opacity:0;display:none;
+}
+/* тот же грейдинг, что в шейдере: свет держится вверху справа, низ кадра гаснет */
+.cine__photo::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 100% at 68% 26%,transparent 30%,rgba(6,5,4,.70) 100%);
+}
+.no-gl .cine__photo,.no-tex .cine__photo{display:block}
+
+.layer{
+  position:absolute;inset:0;display:grid;place-items:center;
+  padding:0 var(--pad);text-align:center;pointer-events:none;
+  will-change:opacity,transform;
+  isolation:isolate;
+}
+.layer > *{pointer-events:auto}
+
+/* 01 — звезда */
+.l-star{gap:0}
+.l-star .glyph{
+  font-family:var(--kr);font-weight:200;font-size:clamp(4rem,13vw,13rem);
+  line-height:1;color:#FFF3E2;
+  text-shadow:0 0 40px rgba(255,214,160,.55),0 0 120px rgba(255,180,110,.35);
+}
+.l-star .word{
+  font-family:var(--disp);font-weight:200;text-transform:uppercase;
+  font-size:clamp(1.6rem,4.6vw,4.4rem);letter-spacing:.5em;margin:.45em 0 0 .5em;
+}
+.l-star .sub{margin-top:1.9em;display:flex;align-items:center;gap:.9em;justify-content:center;
+  font-size:.625rem;letter-spacing:.42em;text-transform:uppercase;color:var(--milk-46)}
+.l-star .sub b{display:block;width:34px;height:1px;background:var(--milk-26)}
+
+/* 02 — огонь. Текст стоит в тёмном небе, свет ушёл вниз кадра */
+.l-fire{align-content:start;padding-top:clamp(6rem,17vh,12rem)}
+.l-fire .dsp{max-width:16ch;font-weight:300}
+.l-fire .dsp em{font-style:normal;color:#FFC58C}
+
+/* 03 — BBQ */
+.l-bbq{place-items:end start;text-align:left;padding-bottom:clamp(3rem,7vh,6rem)}
+.l-bbq__in{max-width:min(46rem,90vw)}
+.l-bbq .dsp{margin-bottom:.5em;font-weight:300}
+.l-bbq .eyebrow{color:rgba(242,234,223,.78)}
+.l-bbq .steps{
+  display:flex;flex-wrap:wrap;gap:.4em 1.4em;margin:0 0 2.1rem;padding:0;list-style:none;
+  font-size:.8125rem;letter-spacing:.04em;color:rgba(242,234,223,.92);
+}
+.l-bbq .steps li{display:flex;align-items:center;gap:.7em}
+.l-bbq .steps li::before{content:'';width:4px;height:4px;border-radius:50%;background:#FF7A45}
+
+.hint{
+  position:absolute;left:50%;bottom:clamp(1.6rem,4vh,3rem);transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.8rem;
+  font-size:.5625rem;letter-spacing:.36em;text-transform:uppercase;color:var(--milk-26);
+  opacity:0;transition:opacity 1.4s var(--ease);
+}
+.hint.on{opacity:1}
+.hint b{display:block;width:1px;height:44px;background:linear-gradient(var(--milk-26),transparent);
+  animation:drop 2.6s var(--ease) infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:50% 0}
+  55%{transform:scaleY(1);transform-origin:50% 0}
+  56%{transform:scaleY(1);transform-origin:50% 100%}
+  100%{transform:scaleY(0);transform-origin:50% 100%}}
+
+/* ==========================================================================
+   СЦЕНА 04 · BBQ EXPERIENCE — закреплённый кадр, пять состояний
+   ========================================================================== */
+.exp{position:relative;height:560vh;background:var(--void)}
+.exp__stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.exp__base{position:absolute;inset:-8% -8%;will-change:transform}
+/* кадр уведён в тень и расфокусирован — врезка справа остаётся резкой, кадр получает глубину */
+.exp__base img{width:100%;height:100%;object-fit:cover;
+  filter:brightness(.46) saturate(.92) blur(3px)}
+.exp__veil{position:absolute;inset:0;
+  background:radial-gradient(125% 95% at 50% 42%,transparent 26%,rgba(7,6,5,.62) 100%)}
+.exp__num{
+  position:absolute;left:var(--pad);top:clamp(5.5rem,12vh,9rem);
+  font-family:var(--disp);font-weight:200;font-size:.75rem;letter-spacing:.3em;color:var(--milk-46);
+}
+.exp__words{position:absolute;inset:0;display:grid;place-items:center;padding:0 var(--pad)}
+.exp__word{
+  position:absolute;text-align:center;will-change:transform,opacity;
+  max-width:min(18ch,92vw);
+  font-family:var(--disp);font-weight:200;text-transform:uppercase;
+  font-size:clamp(2rem,7.4vw,7.4rem);line-height:.92;letter-spacing:-.03em;
+}
+.exp__word small{
+  display:block;font-family:var(--ui);font-weight:300;text-transform:none;
+  font-size:clamp(.8125rem,1.1vw,1rem);letter-spacing:.02em;color:var(--milk-46);
+  margin-top:1.6em;max-width:34ch;margin-left:auto;margin-right:auto;line-height:1.7;
+}
+.exp__inset{
+  position:absolute;right:var(--pad);bottom:clamp(2.5rem,7vh,5rem);
+  width:clamp(140px,17vw,270px);aspect-ratio:3/4;overflow:hidden;
+  border:1px solid var(--milk-12);
+}
+.exp__inset img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;will-change:opacity,transform}
+.exp__prog{
+  position:absolute;left:var(--pad);bottom:clamp(2.5rem,7vh,5rem);
+  display:flex;gap:.5rem;align-items:center;
+}
+.exp__prog s{display:block;width:26px;height:1px;background:var(--milk-12);text-decoration:none;
+  transition:background .5s var(--ease)}
+.exp__prog s.on{background:var(--gold)}
+
+/* ==========================================================================
+   СЦЕНА 05 · КОРЕЙСКАЯ КУХНЯ — поток блюд
+   ========================================================================== */
+.flow{position:relative;height:620vh;background:var(--void)}
+.flow__stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;align-content:center}
+.flow__head{
+  position:absolute;inset:auto 0 auto 0;top:50%;transform:translateY(-50%);
+  text-align:center;padding:0 var(--pad);z-index:1;pointer-events:none;
+}
+.flow__head .dsp{color:rgba(242,234,223,.10);letter-spacing:-.045em}
+.flow__track{display:flex;align-items:center;gap:clamp(2rem,6vw,9rem);
+  padding-left:50vw;padding-right:50vw;will-change:transform;z-index:2}
+.card{position:relative;flex:none;will-change:transform}
+.card figure{margin:0;position:relative;overflow:hidden;background:var(--char-2)}
+.card img{width:100%;height:100%;object-fit:cover;will-change:transform}
+.card figcaption{
+  display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+  margin-top:1.1rem;font-size:.625rem;letter-spacing:.3em;text-transform:uppercase;color:var(--milk-46);
+}
+.card figcaption b{font-family:var(--disp);font-weight:300;letter-spacing:.12em;color:var(--milk)}
+.card--a figure{width:clamp(230px,30vw,460px);aspect-ratio:3/4}
+.card--b figure{width:clamp(260px,36vw,600px);aspect-ratio:4/3}
+.card--c figure{width:clamp(200px,24vw,380px);aspect-ratio:1/1}
+.flow__end{flex:none;width:min(34rem,80vw);text-align:left}
+.flow__end .lede{margin:1.4rem 0 2.2rem}
+
+/* ==========================================================================
+   СЦЕНА 06 · ПЁЛЬ ЦЕХ — смена ритма, светлый разворот
+   ========================================================================== */
+.tseh{position:relative;background:var(--milk);color:var(--char);height:520vh}
+.tseh__stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column}
+.tseh__top{
+  flex:none;
+  padding:clamp(3.5rem,8vh,6rem) var(--pad) clamp(1.2rem,2.4vh,2rem);
+  display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap;
+}
+.tseh .dsp{color:var(--char)}
+.tseh .eyebrow{color:rgba(16,13,11,.45)}
+.tseh__note{max-width:26rem;font-size:.9375rem;line-height:1.75;color:rgba(16,13,11,.66)}
+.tseh__track{display:flex;gap:clamp(1rem,2.4vw,2.6rem);align-items:stretch;
+  padding:0 var(--pad);flex:1 1 0;min-height:0;
+  padding-bottom:clamp(1.2rem,3vh,2.4rem);will-change:transform}
+.tile{flex:none;position:relative;overflow:hidden;background:#E4D9CB;min-height:0}
+.tile img,.tile video{width:100%;height:100%;object-fit:cover}
+.tile figcaption{
+  position:absolute;left:0;bottom:0;right:0;padding:1rem 1.15rem;
+  font-size:.625rem;letter-spacing:.26em;text-transform:uppercase;color:#fff;
+  background:linear-gradient(transparent,rgba(10,8,7,.72));
+}
+.tile--tall{width:clamp(200px,23vw,360px)}
+.tile--wide{width:clamp(280px,36vw,560px)}
+.tseh__foot{
+  flex:none;
+  padding:0 var(--pad) clamp(1.4rem,3.5vh,2.6rem);
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;
+  border-top:1px solid rgba(16,13,11,.12);padding-top:1.2rem;
+}
+.tseh__addr{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(16,13,11,.6)}
+
+/* ==========================================================================
+   СЦЕНА 07 · АТМОСФЕРА — тишина после движения
+   ========================================================================== */
+.mood{position:relative;background:var(--void);padding:clamp(6rem,16vh,13rem) 0 clamp(5rem,12vh,10rem)}
+.mood__hero{position:relative;height:min(86vh,880px);height:min(86svh,880px);overflow:hidden;margin:0 var(--pad)}
+.mood__hero img{width:100%;height:120%;object-fit:cover;position:absolute;inset:0;will-change:transform}
+.mood__hero::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 105% at 72% 22%,transparent 34%,rgba(7,6,5,.66) 100%)}
+.mood__cap{position:absolute;left:clamp(1.2rem,3vw,3rem);bottom:clamp(1.6rem,4vw,3rem);z-index:2;max-width:34rem}
+.mood__cap .lede{margin-top:1.1rem}
+.mood__grid{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(1rem,2.4vw,2.6rem);
+  padding:clamp(3rem,9vh,7rem) var(--pad) 0;align-items:start;
+}
+.mood__grid figure{margin:0;position:relative;overflow:hidden;background:var(--char-2)}
+.mood__grid img,.mood__grid video{width:100%;height:100%;object-fit:cover;will-change:transform}
+.m-a{grid-column:1/6;aspect-ratio:4/5}
+/* ширина и место в сетке прежние, ограничена только высота — чтобы кадр
+   помещался в окно вместе с верхним отступом */
+.m-b{grid-column:7/13;aspect-ratio:3/4;
+  max-height:80vh;max-height:80svh;
+  margin-top:clamp(3rem,10vh,9rem)}
+.m-c{grid-column:2/7;aspect-ratio:16/10;margin-top:clamp(2rem,6vh,5rem)}
+.m-txt{grid-column:8/12;margin-top:clamp(3rem,9vh,8rem)}
+.m-txt .eyebrow{margin-bottom:1.1rem}
+
+/* ==========================================================================
+   СЦЕНА 08 · ФИНАЛ
+   ========================================================================== */
+.fin{position:relative;height:300vh;background:var(--void)}
+.fin__stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center;
+  text-align:center;padding:0 var(--pad)}
+.fin__glow{
+  position:absolute;left:50%;top:50%;width:min(150vh,150vw);aspect-ratio:1;
+  transform:translate(-50%,-50%) scale(.2);border-radius:50%;
+  background:radial-gradient(circle,rgba(255,206,150,.30) 0%,rgba(217,120,50,.11) 34%,transparent 66%);
+  will-change:transform,opacity;
+}
+.fin__in{position:relative;z-index:2;display:grid;justify-items:center;gap:0}
+.fin__glyph{font-family:var(--kr);font-weight:200;font-size:clamp(2.6rem,7vw,6rem);line-height:1;
+  color:#FFEFDC;text-shadow:0 0 40px rgba(255,206,150,.5)}
+.fin__word{font-family:var(--disp);font-weight:200;text-transform:uppercase;
+  font-size:clamp(2.2rem,8vw,7.5rem);letter-spacing:.34em;margin:.35em 0 0 .34em;line-height:1}
+.fin__line{margin-top:1.5em;max-width:18ch}
+.fin__meta{
+  margin-top:clamp(2.4rem,6vh,4rem);display:flex;flex-direction:column;align-items:center;gap:.35rem;
+  font-size:.6875rem;letter-spacing:.28em;text-transform:uppercase;color:var(--milk-46);
+}
+.fin__cta{margin-top:clamp(2rem,5vh,3rem)}
+
+.foot{
+  border-top:1px solid var(--milk-06);padding:clamp(2rem,5vh,3.2rem) var(--pad);
+  display:flex;justify-content:space-between;gap:1.2rem;flex-wrap:wrap;
+  font-size:.625rem;letter-spacing:.22em;text-transform:uppercase;color:var(--milk-26);
+}
+.foot a:hover{color:var(--milk-72)}
+
+/* ---------- заглушка под будущее фото ---------- */
+.ph{display:grid;place-items:center;background:
+  repeating-linear-gradient(45deg,#141110 0 12px,#171312 12px 24px);
+  color:var(--milk-26);font-size:.625rem;letter-spacing:.24em;text-transform:uppercase}
+
+/* ==========================================================================
+   МОБИЛЬНАЯ ВЕРСИЯ — своя драматургия, не сжатый десктоп
+   ========================================================================== */
+@media (max-width:860px){
+  .nav{mix-blend-mode:normal;background:linear-gradient(rgba(7,6,5,.86),transparent)}
+  /* на мобильном оставляем только «Меню» — второй якорь, кроме брони */
+  .nav__links{gap:1rem}
+  .nav__links a:not(:first-child){display:none}
+  .nav__cta{padding:.7em 1.1em}
+  .rail{display:none}
+  .snd{left:auto;right:var(--pad);bottom:clamp(.9rem,3vw,1.4rem)}
+
+  .cine{height:560vh}
+  .l-bbq{place-items:end center;text-align:center}
+  .l-bbq .steps{justify-content:center}
+
+  .exp{height:460vh}
+  .exp__inset{width:34vw;right:var(--pad);bottom:clamp(4.6rem,12vh,7rem)}
+  .exp__word small{margin-top:1.2em}
+
+  /* поток блюд — вертикальный, без горизонтального пиннинга */
+  .flow{height:auto;padding:clamp(4rem,12vh,7rem) 0}
+  .flow__stage{position:static;height:auto;display:block}
+  .flow__head{position:static;transform:none;margin-bottom:clamp(2rem,7vh,4rem)}
+  .flow__head .dsp{color:var(--milk)}
+  .flow__track{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;
+    padding:0 var(--pad);transform:none!important}
+  .card figure{width:100%!important;aspect-ratio:3/4!important}
+  .card--b{grid-column:1/-1}
+  .card--b figure{aspect-ratio:4/3!important}
+  .flow__end{grid-column:1/-1;width:auto;margin-top:2.5rem}
+
+  .tseh{height:auto;padding-bottom:clamp(3rem,8vh,5rem)}
+  .tseh__stage{position:static;height:auto;display:block}
+  .tseh__top{flex-direction:column;align-items:flex-start;padding-top:clamp(3.5rem,10vh,6rem)}
+  .tseh__track{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;
+    transform:none!important;padding-bottom:2rem}
+  .tile{width:auto!important;aspect-ratio:3/4}
+  .tile--wide{grid-column:1/-1;aspect-ratio:4/3}
+  .tseh__foot{flex-direction:column;align-items:flex-start}
+
+  .mood{padding-top:clamp(4rem,12vh,7rem)}
+  .mood__hero{height:74vh;height:74svh}
+  .mood__grid{grid-template-columns:repeat(6,1fr)}
+  .m-a{grid-column:1/5}
+  .m-b{grid-column:3/7;margin-top:1.2rem;max-height:none}
+  .m-c{grid-column:1/6;margin-top:1.2rem}
+  .m-txt{grid-column:1/7;margin-top:2.4rem}
+
+  .fin{height:230vh}
+  .grain{opacity:.3}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .grain{animation:none}
+  .hint b{animation:none}
+  .snd.is-live u s{animation:none;height:7px}
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ================= НАВИГАЦИЯ ================= -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top">ПЁЛЬ <span class="kr">별</span></a>
+  <nav class="nav__links">
+    <a href="#kitchen">Меню</a>
+    <a href="#exp">BBQ</a>
+    <a href="#mood">О ресторане</a>
+    <a href="#final">Контакты</a>
+  </nav>
+  <a class="nav__cta" href="#final">Забронировать</a>
+</header>
+
+<aside class="rail" id="rail" aria-label="Сцены">
+  <button data-go="cine" data-f="0"><span>별 · Звезда</span><b></b></button>
+  <button data-go="cine" data-f="0.34"><span>Огонь</span><b></b></button>
+  <button data-go="cine" data-f="0.86"><span>BBQ</span><b></b></button>
+  <button data-go="exp" data-f="0"><span>За вашим столом</span><b></b></button>
+  <button data-go="kitchen" data-f="0"><span>Кухня</span><b></b></button>
+  <button data-go="tseh" data-f="0"><span>ПЁЛЬ ЦЕХ</span><b></b></button>
+  <button data-go="mood" data-f="0"><span>Вечер</span><b></b></button>
+  <button data-go="final" data-f="0.2"><span>Бронь</span><b></b></button>
+</aside>
+
+<button class="snd" id="snd" aria-pressed="false">
+  <u><s></s><s></s><s></s><s></s></u><span id="sndLabel">Звук выкл.</span>
+</button>
+
+<main id="top">
+
+<!-- ================= СЦЕНЫ 01–03 ================= -->
+<section class="cine" id="cine">
+  <div class="cine__stage">
+    <canvas class="cine__gl" id="gl" aria-hidden="true"></canvas>
+    <div class="cine__fallback" aria-hidden="true"></div>
+    <div class="cine__photo" id="cinePhoto" aria-hidden="true"></div>
+
+    <!-- 01 · звезда -->
+    <div class="layer l-star" id="lStar">
+      <div>
+        <div class="glyph kr">별</div>
+        <h1 class="word">ПЁЛЬ</h1>
+        <p class="sub"><b></b><span class="kr">별</span> · Звезда<b></b></p>
+      </div>
+    </div>
+
+    <!-- 02 · огонь -->
+    <div class="layer l-fire" id="lFire">
+      <h2 class="dsp dsp--lg rv" data-split>Когда огонь<br>собирает людей<br>за одним столом</h2>
+    </div>
+
+    <!-- 03 · BBQ -->
+    <div class="layer l-bbq" id="lBbq">
+      <div class="l-bbq__in">
+        <p class="eyebrow" style="margin-bottom:1.4rem">별 · Хворостянского, 2Б</p>
+        <h2 class="dsp dsp--lg rv" data-split id="bbq">BBQ прямо<br>за вашим<br>столом</h2>
+        <ul class="steps">
+          <li>Вы выбираете</li><li>Вы жарите</li><li>Вы пробуете</li>
+        </ul>
+        <a class="btn btn--fire" href="#exp"><i></i>Посмотреть BBQ</a>
+      </div>
+    </div>
+
+    <div class="hint" id="hint"><span>Листайте</span><b></b></div>
+  </div>
+</section>
+
+<!-- ================= СЦЕНА 04 · BBQ EXPERIENCE ================= -->
+<section class="exp" id="exp">
+  <div class="exp__stage">
+    <div class="exp__base" id="expBase">
+      <img src="img/hero-l1.webp" alt="Стол с грилем в ресторане ПЁЛЬ" fetchpriority="low">
+    </div>
+    <div class="exp__veil"></div>
+    <p class="exp__num">02 — Ритуал</p>
+
+    <div class="exp__words" id="expWords">
+      <div class="exp__word">Выбрать<small>Свинина, говядина, морепродукты. Порции приносят сырыми — дальше всё в ваших руках.</small></div>
+      <div class="exp__word">Разожжённый гриль<small>Гриль встроен в стол. Его разжигают при вас и следят за жаром весь вечер.</small></div>
+      <div class="exp__word">Жарить<small>Пара минут на каждую сторону. Щипцы и ножницы на столе, вытяжка — прямо над грилем.</small></div>
+      <div class="exp__word">Пробовать<small>Лист салата, кусок мяса, кимчи, соус. Собирается прямо в руке.</small></div>
+      <div class="exp__word">Повторить<small>И так — пока за столом не закончится разговор.</small></div>
+    </div>
+
+    <div class="exp__inset" id="expInset">
+      <img src="img/meat.png" alt="Сырое мясо и закуски перед жаркой">
+      <img src="img/grill.png" alt="Стол с грилем у панорамного окна">
+      <img src="img/bbq.png" alt="Мясо на гриле">
+      <img src="img/set.jpg" alt="Корейский сет">
+      <img src="img/hogo2.png" alt="Стол в разгаре ужина">
+    </div>
+
+    <div class="exp__prog" id="expProg"><s></s><s></s><s></s><s></s><s></s></div>
+  </div>
+</section>
+
+<!-- ================= СЦЕНА 05 · КОРЕЙСКАЯ КУХНЯ ================= -->
+<section class="flow" id="kitchen">
+  <div class="flow__stage">
+    <div class="flow__head">
+      <h2 class="dsp dsp--xl">Корейская<br>кухня</h2>
+    </div>
+    <div class="flow__track" id="flowTrack">
+      <div class="card card--a" data-depth="0.10">
+        <figure><img src="img/meat.png" alt="Мясо и закуски" loading="lazy" decoding="async"></figure>
+        <figcaption><b>Мясо</b><span>01</span></figcaption>
+      </div>
+      <div class="card card--b" data-depth="-0.06">
+        <figure><img src="img/hogo1.png" alt="Хого — корейский котёл" loading="lazy" decoding="async"></figure>
+        <figcaption><b>Хого</b><span>02</span></figcaption>
+      </div>
+      <div class="card card--c" data-depth="0.16">
+        <figure><img src="img/rolls.png" alt="Роллы" loading="lazy" decoding="async"></figure>
+        <figcaption><b>Роллы</b><span>03</span></figcaption>
+      </div>
+      <div class="card card--a" data-depth="-0.10">
+        <figure><img src="img/pigodi.png" alt="Пигоди" loading="lazy" decoding="async"></figure>
+        <figcaption><b>Пигоди</b><span>04</span></figcaption>
+      </div>
+      <div class="card card--b" data-depth="0.08">
+        <figure><img src="img/bibimbap.jpg" alt="Пибимпап" loading="lazy" decoding="async"></figure>
+        <figcaption><b>Пибимпап</b><span>05</span></figcaption>
+      </div>
+      <div class="card card--c" data-depth="-0.14">
+        <figure><img src="img/set.jpg" alt="Сет закусок" loading="lazy" decoding="async"></figure>
+        <figcaption><b>Закуски</b><span>06</span></figcaption>
+      </div>
+      <div class="flow__end">
+        <p class="eyebrow">별 · Кухня</p>
+        <h3 class="dsp dsp--md" style="margin-top:1.2rem">Традиции,<br>которые звучат<br>по-современному</h3>
+        <p class="lede">Кимчи, пибимпап, пигоди, хого — то, что в Корее едят дома каждый день. Готовим с нуля: от маринадов до теста.</p>
+        <a class="btn" href="#kitchen"><i></i>Смотреть меню</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= СЦЕНА 06 · ПЁЛЬ ЦЕХ ================= -->
+<section class="tseh" id="tseh">
+  <div class="tseh__stage">
+    <div class="tseh__top">
+      <div>
+        <p class="eyebrow">03 — Производство</p>
+        <h2 class="dsp dsp--lg" style="margin-top:1rem">ПЁЛЬ ЦЕХ</h2>
+      </div>
+      <p class="tseh__note"><b style="font-weight:500">Создаём сами. Готовим с нуля.</b><br>
+        Лапша, роллы, пигоди, моти, корейские салаты. То же, что в зале ресторана, — только упаковано и готово к дороге.</p>
+    </div>
+
+    <div class="tseh__track" id="tsehTrack">
+      <figure class="tile tile--tall"><img src="img/tseh.jpg" alt="Упаковка ПЁЛЬ ЦЕХ" loading="lazy" decoding="async"><figcaption>Ролл с собой</figcaption></figure>
+      <figure class="tile tile--wide"><video id="vTseh" src="video/tseh.mp4" poster="img/tseh-poster.jpg" muted loop playsinline preload="none"></video><figcaption>Цех · Южная, 10А</figcaption></figure>
+      <figure class="tile tile--tall"><img src="img/tseh-pack1.jpg" alt="Роллы и курица в упаковке ПЁЛЬ ЦЕХ" loading="lazy" decoding="async"><figcaption>Навынос</figcaption></figure>
+      <figure class="tile tile--tall"><img src="img/pigodi.png" alt="Пигоди" loading="lazy" decoding="async"><figcaption>Пигоди</figcaption></figure>
+      <figure class="tile tile--tall"><img src="img/tseh-pack2.jpg" alt="Линейка упаковки ПЁЛЬ ЦЕХ" loading="lazy" decoding="async"><figcaption>Наборы</figcaption></figure>
+      <figure class="tile tile--tall"><img src="img/bibimbap.jpg" alt="Пибимпап" loading="lazy" decoding="async"><figcaption>Пибимпап</figcaption></figure>
+      <figure class="tile tile--wide"><img src="img/rolls.png" alt="Роллы" loading="lazy" decoding="async"><figcaption>Роллы</figcaption></figure>
+    </div>
+
+    <div class="tseh__foot">
+      <p class="tseh__addr">Южная улица, 10А · Новороссийск · +7 993 301-00-50</p>
+      <a class="btn btn--dark" href="tel:+79933010050"><i></i>Заказать</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= СЦЕНА 07 · АТМОСФЕРА ================= -->
+<section class="mood" id="mood">
+  <div class="mood__hero" data-par>
+    <img src="img/hall.jpg" alt="Зал ресторана ПЁЛЬ вечером" loading="lazy" decoding="async">
+    <div class="mood__cap">
+      <p class="eyebrow">04 — Атмосфера</p>
+      <h2 class="dsp dsp--lg rv" data-split style="margin-top:1rem">Вечер<br>в ПЁЛЬ</h2>
+      <p class="lede">Место, где ужин становится частью вечера.</p>
+    </div>
+  </div>
+
+  <div class="mood__grid">
+    <figure class="m-a" data-par><img src="img/interior.png" alt="Свет в зале" loading="lazy" decoding="async"></figure>
+    <figure class="m-b" data-par><video id="vMood" src="video/mood.mp4" poster="img/mood-poster.jpg" muted loop playsinline preload="none"></video></figure>
+    <figure class="m-c" data-par><img src="img/grill.png" alt="Стол у панорамного окна" loading="lazy" decoding="async"></figure>
+    <div class="m-txt">
+      <p class="eyebrow">별</p>
+      <p class="lede">Панорама на бухту, приглушённый свет, гриль в центре стола. Вечер идёт медленно — так и задумано.</p>
+      <p class="lede" style="margin-top:1.2rem;color:var(--milk-46)">ул. Хворостянского, 2Б · Новороссийск</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= СЦЕНА 08 · ФИНАЛ ================= -->
+<section class="fin" id="final">
+  <div class="fin__stage">
+    <div class="fin__glow" id="finGlow"></div>
+    <div class="fin__in">
+      <div class="fin__glyph kr" id="finGlyph">별</div>
+      <div class="fin__word" id="finWord">ПЁЛЬ</div>
+      <h2 class="dsp dsp--md fin__line rv" data-split id="finLine">Звезда, к которой<br>хочется возвращаться</h2>
+      <div class="fin__meta">
+        <span>ПЁЛЬ Ресторан</span>
+        <span>ул. Хворостянского, 2Б</span>
+        <span>Новороссийск</span>
+      </div>
+      <a class="btn btn--xl fin__cta" href="tel:+79933010050"><i></i>Забронировать столик</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>ПЁЛЬ · 별 · Новороссийск</span>
+  <span>Ресторан — Хворостянского, 2Б · Цех — Южная, 10А</span>
+  <a href="tel:+79933010050">+7 993 301-00-50</a>
+</footer>
+
+</main>
+
+<script>
+/* ==========================================================================
+   ДВИЖОК
+   Скролл — единственный источник времени. Все сцены читают одну и ту же
+   позицию и отдают прогресс 0..1. Никаких независимых таймлайнов.
+   ========================================================================== */
+(function(){
+'use strict';
+
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var isTouch = matchMedia('(hover: none)').matches;
+var mobile  = matchMedia('(max-width: 860px)').matches;
+
+var clamp = function(v,a,b){ return v<a?a:(v>b?b:v); };
+var inv   = function(v,a,b){ return clamp((v-a)/(b-a||1e-6),0,1); };
+var ease  = function(t){ return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; };
+var outc  = function(t){ return 1-Math.pow(1-t,3); };
+/* окно видимости: 0 → нарастание a..b → 1 → затухание c..d → 0 */
+function win(p,a,b,c,d){ return Math.min(inv(p,a,b), 1-inv(p,c,d)); }
+
+/* ---------- плавная прокрутка (Lenis, если доступна) ---------- */
+var lenis = null;
+function bootLenis(){
+  if (reduce || isTouch || !window.Lenis) return;
+  try{
+    lenis = new window.Lenis({ lerp:.085, wheelMultiplier:.95, smoothWheel:true, syncTouch:false });
+  }catch(e){ lenis = null; }
+}
+var s = document.createElement('script');
+s.src = 'https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js';
+s.async = true;
+s.onload = bootLenis;
+document.head.appendChild(s);
+
+/* ---------- реестр сцен ---------- */
+var scenes = [];
+function scene(el, cb, opt){
+  if (!el) return;
+  scenes.push({ el:el, cb:cb, top:0, span:1, p:-1, live:!!(opt&&opt.live) });
+}
+function measure(){
+  var y = window.pageYOffset, vh = window.innerHeight;
+  for (var i=0;i<scenes.length;i++){
+    var sc = scenes[i], r = sc.el.getBoundingClientRect();
+    sc.top  = r.top + y;
+    sc.span = Math.max(1, r.height - vh);
+    sc.vis  = r.height;
+    sc.p = -1;
+  }
+}
+
+/* ---------- раскрытие строк ---------- */
+var splits = [];
+[].forEach.call(document.querySelectorAll('[data-split]'), function(el){
+  var parts = el.innerHTML.split(/<br\s*\/?>/i);
+  el.innerHTML = parts.map(function(t){ return '<span class="ln"><i>'+t+'</i></span>'; }).join('');
+  splits.push(el);
+});
+function reveal(el, t){
+  var lines = el.querySelectorAll('.ln > i');
+  for (var i=0;i<lines.length;i++){
+    var d = i * .13;
+    var k = outc(inv(t, d, d + .62));
+    /* 155% — иначе точки над Ё и надстрочные знаки торчат из-под маски */
+    lines[i].style.transform = 'translate3d(0,'+((1-k)*155).toFixed(2)+'%,0)';
+    lines[i].style.opacity = k.toFixed(3);
+  }
+}
+
+/* ==========================================================================
+   СЦЕНЫ 01–03 · WebGL: звезда → свет → огонь → выжигание фотографии
+   ========================================================================== */
+var VERT = 'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+
+var FRAG = [
+'precision highp float;',
+'uniform vec2 uRes,uTexRes;uniform float uT,uP,uReady,uOct;uniform sampler2D uTex;',
+'varying vec2 v;',
+/* хеш без sin: на больших координатах sin-версия даёт диагональные полосы */
+'float hash(vec2 p){vec3 q=fract(vec3(p.xyx)*vec3(.1031,.1030,.0973));',
+' q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}',
+'float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
+' float a=hash(i),b=hash(i+vec2(1.,0.)),c=hash(i+vec2(0.,1.)),d=hash(i+vec2(1.,1.));',
+' return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}',
+'float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){if(float(i)>=uOct)break;',
+' s+=a*noise(p);p*=2.03;a*=.5;}return s;}',
+'void main(){',
+' vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;',
+' float d=length(uv);',
+/* фазы */
+' float a=smoothstep(0.0,0.30,uP);',
+' float warm=smoothstep(0.20,0.52,uP);',
+' float b=smoothstep(0.28,0.58,uP)*(1.-smoothstep(0.70,0.94,uP)*.62);',
+' float c=smoothstep(0.56,0.88,uP);',
+' vec3 col=vec3(0.);',
+/* одна звезда. Больше в кадре ничего нет */
+/* источник опускается в нижнюю треть кадра — там, где будет стол и огонь */
+' float drop=smoothstep(0.18,0.52,uP);',
+' vec2 lc=vec2(0.,-.50*drop);',
+' float dl=length((uv-lc)*vec2(1.0,mix(1.0,.86,drop)));',
+' float sr=mix(.0045,.30,a*a);',
+' float halo=pow(sr/(dl+sr*.66),2.45);',
+' float core=1.-smoothstep(0.,sr*.42,dl);',
+' vec3 cool=vec3(.78,.86,1.06), hot=vec3(1.0,.63,.26);',
+' vec3 sc=mix(cool,hot,warm);',
+/* когда разгорается огонь, ядро отдаёт ему свет и само тускнеет */
+' float dim=1.-.62*b;',
+' col+=sc*(halo*(.34+.46*a)+core*.95)*dim;',
+/* огонь: fbm с доменным искажением, поток снизу вверх */
+' if(b>0.001){',
+'  vec2 fp=uv*vec2(1.35,1.0);',
+'  float q=fbm(fp*1.35+vec2(uT*.05,-uT*.20));',
+'  float f=fbm(fp*2.35+vec2(q*.85,-uT*.42+q*.6));',
+'  float rad=1.-smoothstep(0.05,1.20,length((uv-lc*.65)*vec2(.72,1.05)));',
+'  float lift=smoothstep(-.85,.55,uv.y+f*.35);',
+'  float flame=pow(f*rad,1.55)*(.35+.75*(1.-lift))*b*2.35;',
+'  col+=mix(vec3(1.0,.62,.22),vec3(.95,.24,.05),clamp(f*1.1,0.,1.))*flame;',
+'  col+=vec3(1.0,.55,.20)*pow(rad,3.0)*b*.22;',
+/* редкие искры */
+'  vec2 gp=uv*vec2(9.,6.)+vec2(0.,uT*.55);',
+'  vec2 gi=floor(gp);float sp=hash(gi);',
+'  if(sp>.965){ float sd=length(fract(gp)-.5);',
+'   col+=vec3(1.,.66,.30)*(.0009/(sd*sd+.0004))*b*(.5+.5*sin(uT*3.+sp*40.)); }',
+' }',
+/* дым перед фотографией */
+' float smoke=win(uP,0.46,0.62,0.74,0.92);',
+' if(smoke>0.001){',
+'  float sm=fbm(uv*2.6+vec2(uT*.035,-uT*.085));',
+'  col=mix(col,vec3(.19,.17,.16)+sm*.30,smoke*.55);',
+' }',
+/* мягкая компрессия света — чтобы огонь не выгорал в белое */
+' col=col/(col+vec3(.78))*1.42;',
+/* выжигание: фотография проступает через шумовой порог */
+' if(uReady>.5 && c>0.001){',
+'  float sa=uRes.x/uRes.y, ta=uTexRes.x/uTexRes.y;',
+'  float zoom=mix(1.22,1.0,c);',
+'  vec2 u2=(v-.5)*zoom;',
+'  if(sa>ta) u2.y*=ta/sa; else u2.x*=sa/ta;',
+'  float dn=fbm(uv*2.1+vec2(0.,-uT*.03));',
+'  float disp=(1.-c)*.075;',
+'  vec3 photo=texture2D(uTex,u2+.5+(dn-.5)*disp).rgb;',
+/* свет уходит вверх кадра: низ и левый край гаснут — там встанет заголовок */
+'  photo*=(1.-.42*(1.-smoothstep(0.,.58,v.y)))*(1.-.20*(1.-smoothstep(0.,.52,v.x)));',
+/* поле выжигания: шум + притяжение к очагу — фотография растёт из огня */
+'  float fld=dn*.85+(1.-dl*.42)*.55;',
+/* порог опускается — огонь съедает кадр от центра к краям */
+'  float edge=mix(1.78,0.16,c);',
+'  float m=smoothstep(edge-.32,edge,fld);',
+'  float band=smoothstep(0.,.30,m)*(1.-smoothstep(.26,.62,m));',
+'  col=mix(col,photo*(.62+.38*c),m);',
+'  col+=vec3(1.0,.42,.10)*band*(1.-c*.55)*1.55;',
+' }',
+/* виньетка, лёгкая тонировка, зерно */
+' col*=1.-.46*pow(clamp(length(uv*vec2(.85,1.0)),0.,1.6),2.1);',
+' col=pow(max(col,0.),vec3(.92));',
+' col+=(hash(v*uRes+fract(uT))-.5)*.035;',
+' gl_FragColor=vec4(col,1.);',
+'}'
+].join('\n');
+
+/* win() внутри GLSL */
+FRAG = FRAG.replace('void main(){',
+  'float win(float p,float a,float b,float c,float d){return min(smoothstep(a,b,p),1.-smoothstep(c,d,p));}\nvoid main(){');
+
+var cv = document.getElementById('gl');
+var gl = null, prog = null, U = {}, tex = null, texReady = 0, glOK = false;
+var texW = 1660, texH = 940;
+
+function initGL(){
+  try{
+    gl = cv.getContext('webgl',{alpha:false,antialias:false,depth:false,
+      powerPreference:'high-performance',preserveDrawingBuffer:false})
+      || cv.getContext('experimental-webgl');
+  }catch(e){ gl = null; }
+  if(!gl){ document.documentElement.classList.add('no-gl'); return false; }
+
+  function sh(type, src){
+    var o = gl.createShader(type);
+    gl.shaderSource(o, src); gl.compileShader(o);
+    if(!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o));
+    return o;
+  }
+  try{
+    prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  }catch(err){
+    document.documentElement.classList.add('no-gl'); gl = null; return false;
+  }
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog,'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  ['uRes','uTexRes','uT','uP','uReady','uOct','uTex'].forEach(function(n){
+    U[n] = gl.getUniformLocation(prog, n);
+  });
+
+  tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,1,1,0,gl.RGB,gl.UNSIGNED_BYTE,new Uint8Array([12,10,9]));
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.uniform1i(U.uTex, 0);
+
+  /* пока текстуры нет — кадр держит DOM-фотография (file://, медленная сеть) */
+  document.documentElement.classList.add('no-tex');
+  var im = new Image();
+  im.decoding = 'async';
+  im.onload = function(){
+    if(!gl) return;
+    try{
+      texW = im.naturalWidth; texH = im.naturalHeight;
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,im);
+      texReady = 1;
+      document.documentElement.classList.remove('no-tex');
+    }catch(e){ texReady = 0; }   /* cross-origin: остаёмся на DOM-фотографии */
+    cineScene(cineP);
+  };
+  im.src = 'img/bbq.png';
+
+  cv.addEventListener('webglcontextlost', function(e){
+    e.preventDefault(); glOK = false;
+    document.documentElement.classList.add('no-gl');
+    cineScene(cineP);
+  });
+
+  glOK = true;
+  return true;
+}
+
+var glW=0, glH=0;
+function sizeGL(){
+  if(!glOK) return;
+  var dpr = Math.min(window.devicePixelRatio||1, mobile ? 1.4 : 1.9);
+  var w = Math.round(cv.clientWidth * dpr), h = Math.round(cv.clientHeight * dpr);
+  if(w===glW && h===glH) return;
+  glW=w; glH=h; cv.width=w; cv.height=h;
+  gl.viewport(0,0,w,h);
+  gl.uniform2f(U.uRes, w, h);
+}
+
+/* ---------- слои сцены 01–03 ---------- */
+var stage   = document.querySelector('.cine__stage');
+var lStar   = document.getElementById('lStar');
+var lFire   = document.getElementById('lFire');
+var lBbq    = document.getElementById('lBbq');
+var fireTxt = lFire.querySelector('[data-split]');
+var bbqTxt  = lBbq.querySelector('[data-split]');
+var hint    = document.getElementById('hint');
+var cinePhoto = document.getElementById('cinePhoto');
+var cineP = 0, cineVisible = true;
+
+function cineScene(p){
+  cineP = p;
+
+  /* 01 — сначала в кадре только звезда, надпись приходит с прокруткой */
+  var o1 = win(p, 0.0, 0.035, 0.14, 0.26);
+  lStar.style.opacity = o1.toFixed(3);
+  var k1 = inv(p, 0, .26);
+  lStar.style.transform = 'translate3d(0,'+(-k1*70).toFixed(1)+'px,0) scale('+(1+k1*.34).toFixed(3)+')';
+  lStar.style.filter = 'blur('+(k1*k1*9).toFixed(2)+'px)';
+
+  /* 02 — огонь */
+  var o2 = win(p, 0.29, 0.36, 0.50, 0.58);
+  lFire.style.opacity = o2.toFixed(3);
+  lFire.style.transform = 'translate3d(0,'+((.44-p)*160).toFixed(1)+'px,0)';
+  reveal(fireTxt, inv(p, .29, .46));
+  lFire.style.filter = 'blur('+((1-o2)*7).toFixed(2)+'px)';
+
+  /* 03 — BBQ */
+  var o3 = inv(p, 0.80, 0.90);
+  lBbq.style.opacity = o3.toFixed(3);
+  lBbq.style.transform = 'translate3d(0,'+((1-o3)*54).toFixed(1)+'px,0)';
+  reveal(bbqTxt, inv(p, .82, .97));
+
+  /* подсказка «листайте» — только в самом начале */
+  hint.classList.toggle('on', p < .04 && hintReady);
+
+  /* тёплая подсветка страницы под сцену огня */
+  stage.style.background = 'radial-gradient(120% 90% at 50% '+(55 - p*10).toFixed(1)+'%,' +
+    'rgba('+Math.round(11+p*26)+','+Math.round(9+p*10)+','+Math.round(8+p*6)+',1) 0%, #050404 72%)';
+
+  /* фотография из DOM — когда шейдер не может показать её сам */
+  if(!glOK || !texReady){
+    var pk = inv(p,.56,.9);
+    cinePhoto.style.opacity = inv(p,.58,.86).toFixed(3);
+    cinePhoto.style.transform = 'scale('+(1.18 - pk*.18).toFixed(3)+')';
+    cinePhoto.style.filter = 'brightness('+(.62+pk*.38).toFixed(3)+')';
+  }
+}
+
+var hintReady = false;
+setTimeout(function(){ hintReady = true; hint.classList.toggle('on', cineP < .04); }, 1500);
+
+/* ==========================================================================
+   СЦЕНА 04 · пять состояний одного кадра
+   ========================================================================== */
+var expBase  = document.getElementById('expBase');
+var expWords = [].slice.call(document.querySelectorAll('.exp__word'));
+var expIns   = [].slice.call(document.querySelectorAll('.exp__inset img'));
+var expProg  = [].slice.call(document.querySelectorAll('.exp__prog s'));
+var STEPS = expWords.length;
+
+function expScene(p){
+  /* непрерывное движение камеры сквозь все состояния */
+  var z = 1.16 + p * .22;
+  var px = (p - .5) * (mobile ? 5 : 9);
+  var py = (p - .5) * -6;
+  expBase.style.transform = 'translate3d('+px.toFixed(2)+'%,'+py.toFixed(2)+'%,0) scale('+z.toFixed(3)+')';
+
+  var t = p * STEPS;               /* 0..5 */
+  var idx = Math.min(STEPS-1, Math.floor(t));
+  for (var i=0;i<STEPS;i++){
+    var local = t - i;             /* -inf..+inf, «своё» окно 0..1 */
+    /* последнее состояние не гаснет — сцена уезжает вместе с ним */
+    var o = (i === STEPS-1) ? inv(local, -.02, .30) : win(local, -.02, .30, .70, 1.0);
+    var w = expWords[i];
+    w.style.opacity = o.toFixed(3);
+    w.style.transform = 'translate3d(0,'+((.5-clamp(local,0,1))*90).toFixed(1)+'px,0) scale('+(.965+o*.035).toFixed(3)+')';
+    w.style.filter = 'blur('+((1-o)*10).toFixed(2)+'px)';
+    w.style.visibility = o < .01 ? 'hidden' : 'visible';
+
+    var im = expIns[i];
+    im.style.opacity = o.toFixed(3);
+    im.style.transform = 'scale('+(1.12 - o*.10).toFixed(3)+')';
+    expProg[i].classList.toggle('on', i === idx);
+  }
+}
+
+/* ==========================================================================
+   СЦЕНА 05 · поток блюд (горизонталь на десктопе)
+   ========================================================================== */
+var flowTrack = document.getElementById('flowTrack');
+var flowCards = [].slice.call(flowTrack.querySelectorAll('.card'));
+var flowHead  = document.querySelector('.flow__head');
+var flowMax = 0;
+
+function flowMeasure(){
+  if (mobile){ flowMax = 0; return; }
+  flowMax = Math.max(0, flowTrack.scrollWidth - window.innerWidth);
+}
+function flowScene(p){
+  if (mobile) return;
+  var e = p;                                  /* линейно — так честнее для потока */
+  flowTrack.style.transform = 'translate3d('+(-e*flowMax).toFixed(1)+'px,0,0)';
+  flowHead.style.transform = 'translateY(-50%) translate3d('+(-e*140).toFixed(1)+'px,0,0)';
+  for (var i=0;i<flowCards.length;i++){
+    var c = flowCards[i], dep = parseFloat(c.getAttribute('data-depth')) || 0;
+    var r = c.getBoundingClientRect();
+    var mid = (r.left + r.width/2) / window.innerWidth - .5;   /* -0.5 .. 0.5 */
+    c.style.transform = 'translate3d(0,'+(dep*220*Math.cos(mid*1.4)).toFixed(1)+'px,0)';
+    var im = c.querySelector('img');
+    if (im) im.style.transform = 'scale(1.12) translate3d('+(mid*-5).toFixed(2)+'%,0,0)';
+    c.style.opacity = (1 - Math.min(.55, Math.max(0, Math.abs(mid)-.55)*1.6)).toFixed(3);
+  }
+}
+
+/* ==========================================================================
+   СЦЕНА 06 · ПЁЛЬ ЦЕХ (горизонтальная лента)
+   ========================================================================== */
+var tsehTrack = document.getElementById('tsehTrack');
+var tsehMax = 0;
+function tsehMeasure(){
+  if (mobile){ tsehMax = 0; return; }
+  var pad = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad')) || 40;
+  tsehMax = Math.max(0, tsehTrack.scrollWidth - window.innerWidth + pad);
+}
+function tsehScene(p){
+  if (mobile) return;
+  tsehTrack.style.transform = 'translate3d('+(-ease(p)*tsehMax).toFixed(1)+'px,0,0)';
+}
+
+/* ==========================================================================
+   СЦЕНА 07 · атмосфера — медленный параллакс
+   ========================================================================== */
+var pars = [].slice.call(document.querySelectorAll('[data-par]'));
+var moodTxt = document.querySelector('.mood__cap [data-split]');
+function parallax(){
+  var vh = window.innerHeight;
+  for (var i=0;i<pars.length;i++){
+    var el = pars[i], r = el.getBoundingClientRect();
+    if (r.bottom < -200 || r.top > vh + 200) continue;
+    var k = (r.top + r.height/2 - vh/2) / vh;          /* -1 .. 1 */
+    var m = el.querySelector('img, video');
+    if (m) m.style.transform = 'translate3d(0,'+(k*(mobile?-5:-9)).toFixed(2)+'%,0) scale(1.10)';
+    if (el.classList.contains('mood__hero') && moodTxt){
+      reveal(moodTxt, inv(-k, -.25, .35));
+    }
+  }
+}
+
+/* ==========================================================================
+   СЦЕНА 08 · финал
+   ========================================================================== */
+var finGlow  = document.getElementById('finGlow');
+var finGlyph = document.getElementById('finGlyph');
+var finWord  = document.getElementById('finWord');
+var finLine  = document.getElementById('finLine');
+var finMeta  = document.querySelector('.fin__meta');
+var finCta   = document.querySelector('.fin__cta');
+
+function finScene(p){
+  var g = inv(p, .05, .62);
+  finGlow.style.transform = 'translate(-50%,-50%) scale('+(.12 + ease(g)*1.05).toFixed(3)+')';
+  finGlow.style.opacity = (win(p,.02,.30,.85,1.0)).toFixed(3);
+
+  var a = inv(p, .06, .28);
+  finGlyph.style.opacity = a.toFixed(3);
+  finGlyph.style.transform = 'scale('+(.6+a*.4).toFixed(3)+')';
+  finGlyph.style.filter = 'blur('+((1-a)*10).toFixed(2)+'px)';
+
+  var b = inv(p, .22, .44);
+  finWord.style.opacity = b.toFixed(3);
+  finWord.style.letterSpacing = (.34 + (1-b)*.24).toFixed(3)+'em';
+
+  reveal(finLine, inv(p, .36, .62));
+
+  var c = inv(p, .56, .76);
+  finMeta.style.opacity = c.toFixed(3);
+  finMeta.style.transform = 'translate3d(0,'+((1-c)*22).toFixed(1)+'px,0)';
+
+  var d = inv(p, .66, .86);
+  finCta.style.opacity = d.toFixed(3);
+  finCta.style.transform = 'translate3d(0,'+((1-d)*26).toFixed(1)+'px,0)';
+}
+
+/* ==========================================================================
+   РЕГИСТРАЦИЯ СЦЕН
+   ========================================================================== */
+scene(document.getElementById('cine'),   cineScene);
+scene(document.getElementById('exp'),    expScene);
+scene(document.getElementById('kitchen'),flowScene);
+scene(document.getElementById('tseh'),   tsehScene);
+scene(document.getElementById('final'),  finScene);
+
+/* ==========================================================================
+   НАВИГАЦИЯ, РЕЛЬС, ЗВУК
+   ========================================================================== */
+var nav = document.getElementById('nav');
+var rail = document.getElementById('rail');
+var railBtns = [].slice.call(rail.querySelectorAll('button'));
+var marks = railBtns.map(function(b){
+  return { el: document.getElementById(b.getAttribute('data-go')),
+           f: parseFloat(b.getAttribute('data-f')) || 0 };
+});
+function markY(m){
+  if (!m.el) return 0;
+  var r = m.el.getBoundingClientRect();
+  var top = r.top + window.pageYOffset;
+  var span = Math.max(0, r.height - window.innerHeight);
+  return Math.max(0, top + span * m.f);
+}
+function goTo(y){
+  if (lenis) lenis.scrollTo(y, { duration: 1.6 });
+  else window.scrollTo({ top:y, behavior: reduce ? 'auto' : 'smooth' });
+}
+railBtns.forEach(function(b, i){
+  b.addEventListener('click', function(){ goTo(markY(marks[i])); });
+});
+[].forEach.call(document.querySelectorAll('a[href^="#"]'), function(a){
+  a.addEventListener('click', function(e){
+    var el = document.querySelector(a.getAttribute('href'));
+    if (!el) return;
+    e.preventDefault();
+    goTo(el.getBoundingClientRect().top + window.pageYOffset);
+  });
+});
+
+function chrome(y){
+  var on = cineP > .30;
+  nav.classList.toggle('on', on);
+  rail.classList.toggle('on', on && !mobile);
+  snd.classList.toggle('on', on);
+
+  var edge = y + window.innerHeight * .35, best = 0;
+  for (var i=0;i<marks.length;i++){ if (markY(marks[i]) <= edge) best = i; }
+  for (i=0;i<railBtns.length;i++) railBtns[i].classList.toggle('is-on', i===best);
+}
+
+/* звук — только по клику, по умолчанию выключен */
+var snd = document.getElementById('snd');
+var sndLabel = document.getElementById('sndLabel');
+var vids = [].slice.call(document.querySelectorAll('video'));
+var sound = false;
+snd.addEventListener('click', function(){
+  sound = !sound;
+  snd.classList.toggle('is-live', sound);
+  snd.setAttribute('aria-pressed', String(sound));
+  sndLabel.textContent = sound ? 'Звук вкл.' : 'Звук выкл.';
+  vids.forEach(function(v){ v.muted = !sound; if (sound && v.paused) v.play().catch(function(){}); });
+});
+
+/* видео — играют только в кадре */
+if ('IntersectionObserver' in window){
+  var vo = new IntersectionObserver(function(en){
+    en.forEach(function(e){
+      var v = e.target;
+      if (e.isIntersecting){
+        if (v.preload === 'none') v.preload = 'auto';
+        if (!reduce) v.play().catch(function(){});
+      } else v.pause();
+    });
+  }, { rootMargin:'120px 0px', threshold:.18 });
+  vids.forEach(function(v){ vo.observe(v); });
+
+  /* кадр 01–03 держим в работе только пока он на экране */
+  var so = new IntersectionObserver(function(en){
+    en.forEach(function(e){ cineVisible = e.isIntersecting; });
+  }, { threshold:0 });
+  so.observe(document.getElementById('cine'));
+}
+
+/* ==========================================================================
+   ЦИКЛ
+   ========================================================================== */
+var lastY = -1, t0 = performance.now(), needMeasure = true;
+
+function frame(now){
+  if (lenis) lenis.raf(now);
+  if (needMeasure){
+    measure(); flowMeasure(); tsehMeasure(); sizeGL(); needMeasure = false;
+    lastY = -1;
+  }
+  var y = window.pageYOffset;
+  var moved = (y !== lastY);
+  if (moved){
+    lastY = y;
+    for (var i=0;i<scenes.length;i++){
+      var sc = scenes[i];
+      var p = clamp((y - sc.top) / sc.span, 0, 1);
+      if (p !== sc.p){ sc.p = p; sc.cb(p); }
+    }
+    parallax();
+    chrome(y);
+  }
+
+  if (glOK && cineVisible){
+    var t = reduce ? 0 : (now - t0) * .001;
+    gl.uniform1f(U.uT, t);
+    gl.uniform1f(U.uP, cineP);
+    gl.uniform1f(U.uReady, texReady);
+    gl.uniform1f(U.uOct, mobile ? 3 : 5);
+    gl.uniform2f(U.uTexRes, texW, texH);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+
+  requestAnimationFrame(frame);
+}
+
+/* ---------- старт ---------- */
+initGL();
+window.addEventListener('resize', function(){
+  mobile = matchMedia('(max-width: 860px)').matches;
+  needMeasure = true;
+}, { passive:true });
+window.addEventListener('orientationchange', function(){ needMeasure = true; });
+window.addEventListener('load', function(){ needMeasure = true; });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ needMeasure = true; });
+
+/* стартовое состояние — до первого скролла */
+requestAnimationFrame(function(now){
+  measure(); flowMeasure(); tsehMeasure(); sizeGL();
+  scenes.forEach(function(sc){ sc.cb(0); });
+  parallax(); chrome(0);
+  t0 = now;
+  requestAnimationFrame(frame);
+});
+
+})();
+</script>
+</body>
+</html>
