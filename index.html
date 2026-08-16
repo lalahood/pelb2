@@ -1194,7 +1194,6 @@ function chrome(y){
   var on = cineP > .30;
   nav.classList.toggle('on', on);
   rail.classList.toggle('on', on && !mobile);
-  snd.classList.toggle('on', on);
 
   var edge = y + window.innerHeight * .35, best = 0;
   for (var i=0;i<marks.length;i++){ if (markY(marks[i]) <= edge) best = i; }
@@ -1209,6 +1208,9 @@ var amb = document.getElementById('amb');
 var vids = [].slice.call(document.querySelectorAll('video'));
 var sound = false, fadeId = null;
 var VOL = .34;
+
+/* кнопка доступна с первого кадра — навигация ещё скрыта, а звук уже можно включить */
+snd.classList.add('on');
 
 function ramp(to, done){
   if (fadeId) cancelAnimationFrame(fadeId);
